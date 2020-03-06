@@ -31,4 +31,9 @@ return [
     'error_message'    => '页面错误！请稍后再试～',
     // 显示错误信息
     'show_error_msg'   => false,
+    //小程序信息
+    'wei_xin_app_info' => array(
+        'appid'  => 'wx4e914ad8a9f219ce',
+        'secret' => '46a4e937b1e3c5520c2c2285f89f4ea6',
+    )
 ];
