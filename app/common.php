@@ -10,6 +10,13 @@ function getOpenid($code){
     return $array;
 }
 
+/**
+ * @返回数据
+ * @param $code
+ * @param $msg
+ * @param string $data
+ * @param string $data1
+ */
 function json($code,$msg,$data = '',$data1 = ''){
     header("Content-type:text/html;charset=utf-8");
     $arr = array(
@@ -21,4 +28,14 @@ function json($code,$msg,$data = '',$data1 = ''){
     $json_data = urldecode(json_encode($arr,JSON_UNESCAPED_SLASHES));
     echo $json_data;
     exit;
+}
+
+/**
+ * @使用redis
+ * @return redis
+ */
+function use_redis(){
+    $redis = new \redis();
+    $redis->connect('127.0.0.1', 6379, 30);
+    return $redis;
 }

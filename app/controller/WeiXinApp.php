@@ -12,11 +12,11 @@ use app\Request;
 class WeiXinApp {
     public function __construct()
     {
-        $this->userinfo = input('post.data');
-        $_3rd_session = $this->userinfo['_3rd_session'];
-        $this->_3rd_session =  session($_3rd_session);
+        $redis = use_redis();
+        $this->_3rd_session = input('post._3rd_session');
+        $this->session_key =  $redis->get($this->_3rd_session);
         $this->WeiXinApp = new logic\WeiXinApp();
-        if(empty($this->_3rd_session)){
+        if(empty($this->session_key)){
             $this->isLoginAttent();
         }
     }
@@ -26,17 +26,18 @@ class WeiXinApp {
      */
     public function isLoginAttent(){
         $code = input('post.code');
-        if(!empty($code) && empty($this->uid)){
+        if(!empty($code) && empty($this->_3rd_session)){
             $_3rd_session = $this->WeiXinApp->Userlogin($code);
+            json(1,'success',$_3rd_session);
         }
-        json(1,'success',$_3rd_session);
     }
 
     public function userInfoUpdate(){
-            if(!empty($this->userinfo)){
-                $this->WeiXinApp->UserInfoUpdate($this->userinfo,$this->_3rd_session);
-            }
-            json(1,'success');
+        $userinfo = input('post.userinfo');
+        if(!empty($userinfo)){
+            $this->WeiXinApp->UserInfoUpdate($userinfo,$this->session_key);
+        }
+        json(1,'success');
     }
 
     public function imgupload(){

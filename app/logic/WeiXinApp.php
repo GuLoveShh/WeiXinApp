@@ -9,13 +9,14 @@ namespace app\logic;
 use think\facade\Db;
 class WeiXinApp{
     public function Userlogin($code){
+        $redis = use_redis();
         $userinfo = getOpenid($code);
         $data['openid'] = $userinfo['openid'];
         try{
             Db::table('user')->save($data);
         }catch (\Exception $e){}
         $_3rd_session = $this->_3rd_session();
-        session($_3rd_session,serialize($userinfo));
+        $redis->setex($_3rd_session,3600,serialize($userinfo));
         return $_3rd_session;
     }
 
@@ -24,8 +25,8 @@ class WeiXinApp{
      * @param $data
      * @param $_3rd_session
      */
-    public function UserInfoUpdate($data,$_3rd_session){
-        $openid = unserialize(session($_3rd_session))['openid'];
+    public function UserInfoUpdate($data,$session_key){
+        $openid = unserialize($session_key)['openid'];
         Db::table('user')->where('openid',$openid)->save($data);
     }
 
