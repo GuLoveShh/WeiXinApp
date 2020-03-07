@@ -7,31 +7,36 @@
  * Time: 16:47
  */
 namespace app\controller;
-
-use app\BaseController;
-use app\Logic;
+use app\logic;
 use app\Request;
-
-class WeiXinApp extends BaseController{
+class WeiXinApp {
     public function __construct()
     {
-        // 必须先调用父类的构造函数
-        parent::__construct();
-        $uid =  Session::get('uid');
-        if(empty($uid)){
+        $this->userinfo = input('post.data');
+        $_3rd_session = $this->userinfo['_3rd_session'];
+        $this->_3rd_session =  session($_3rd_session);
+        $this->WeiXinApp = new logic\WeiXinApp();
+        if(empty($this->_3rd_session)){
             $this->isLoginAttent();
         }
-        $this->WeiXinApp = new Logic\WeiXinApp();
     }
 
     /**
      * @判断用户是否关注和登录
      */
     public function isLoginAttent(){
-        $code = Request::post('code');
-        if(!empty($code) && $uid){
-            $userid = $this->WeiXinApp->Userlogin($code);
+        $code = input('post.code');
+        if(!empty($code) && empty($this->uid)){
+            $_3rd_session = $this->WeiXinApp->Userlogin($code);
         }
+        json(1,'success',$_3rd_session);
+    }
+
+    public function userInfoUpdate(){
+            if(!empty($this->userinfo)){
+                $this->WeiXinApp->UserInfoUpdate($this->userinfo,$this->_3rd_session);
+            }
+            json(1,'success');
     }
 
     public function imgupload(){
