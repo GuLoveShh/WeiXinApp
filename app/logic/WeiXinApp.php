@@ -31,6 +31,39 @@ class WeiXinApp{
     }
 
     /**
+     * @更新用户地图经纬度
+     * @param $data
+     * @param $session_key
+     */
+    public function UserMapUpdate($data,$session_key){
+        $redis = use_redis();
+        $openid = unserialize($session_key)['openid'];
+        $latitude = 'latitude_'.$openid;
+        $longitude = 'longitude_'.$openid;
+        $time = 'create_time_'.$openid;
+        $redis->hSet('map',$latitude,$data['latitude']);
+        $redis->hSet('map',$longitude,$data['longitude']);
+        $redis->hSet('map',$time,time());
+        return true;
+    }
+
+    /**
+     * @获取用户地图经纬度
+     * @param $data
+     * @param $session_key
+     */
+    public function UserMapGet($session_key){
+        $redis = use_redis();
+        $openid = unserialize($session_key)['openid'];
+        $latitude = 'latitude_'.$openid;
+        $longitude = 'longitude_'.$openid;
+        $data['latitude'] = $redis->hGet('map',$latitude);
+        $data['longitude'] = $redis->hGet('map',$longitude);
+        return $data;
+    }
+
+
+    /**
      * @生成_3rd_session随机数
      * @param int $len
      * @return bool|string

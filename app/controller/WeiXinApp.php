@@ -32,12 +32,35 @@ class WeiXinApp {
         }
     }
 
+    /**
+     * @用户信息更新
+     */
     public function userInfoUpdate(){
         $userinfo = input('post.userinfo');
         if(!empty($userinfo)){
             $this->WeiXinApp->UserInfoUpdate($userinfo,$this->session_key);
         }
         json(1,'success');
+    }
+
+    /**
+     * @用户经纬度更新
+     */
+    public function userMapUpdate(){
+        $map_info = input('post.map_info');
+        if(!empty($map_info)){
+            $this->WeiXinApp->UserMapUpdate($map_info,$this->session_key);
+        }
+        json(1,'success');
+    }
+
+
+    /**
+     * @获取用户经纬度
+     */
+    public function userMapGet(){
+        $data = $this->WeiXinApp->UserMapGet($this->session_key);
+        json(1,'success',$data);
     }
 
     public function imgupload(){
