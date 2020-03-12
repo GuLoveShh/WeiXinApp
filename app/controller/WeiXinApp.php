@@ -30,6 +30,7 @@ class WeiXinApp {
             $_3rd_session = $this->WeiXinApp->Userlogin($code);
             json(1,'success',$_3rd_session);
         }
+        json(101,'NOT_LOGIN');
     }
 
     /**
@@ -53,7 +54,6 @@ class WeiXinApp {
         }
         json(1,'success');
     }
-
 
     /**
      * @获取用户经纬度
