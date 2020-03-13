@@ -17,14 +17,13 @@ class WeiXinApp{
         }catch (\Exception $e){
             $uid = Db::table('user')->where('openid', $data['openid'])->value('id');
         }
-        $data['_3rd_session'] = $_3rd_session = $this->_3rd_session();
+        $result['_3rd_session'] = $_3rd_session = $this->_3rd_session();
         session($_3rd_session,serialize($userinfo));
         session('uid',$uid);
-        $data['session_id'] = Session::getId();
         //之前使用redis做存储
         //$redis = use_redis();
         //$redis->setex($_3rd_session,3600,serialize($userinfo));
-        return $data;
+        return $result;
     }
 
     /**

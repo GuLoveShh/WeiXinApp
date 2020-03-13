@@ -14,6 +14,7 @@ class WeiXinApp {
     {
 //        $redis = use_redis();
 //        $this->session_key =  $redis->get($this->_3rd_session);
+        $this->session_id = Session::getId();
         $this->_3rd_session = input('post._3rd_session');
         $this->session_value =  session($this->_3rd_session);
         $this->WeiXinApp = new logic\WeiXinApp();
@@ -30,6 +31,7 @@ class WeiXinApp {
         if(empty($this->session_value)){
             if(!empty($code)){
                 $data = $this->WeiXinApp->Userlogin($code);
+                $data['session_id'] = $this->session_id;
                 json(1,'success',$data);
             }else{
                 json(101,'NOT_LOGIN');
