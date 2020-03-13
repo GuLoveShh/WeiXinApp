@@ -7,17 +7,24 @@
  */
 namespace app\logic;
 use think\facade\Db;
+use think\facade\Session;
 class WeiXinApp{
     public function Userlogin($code){
-        $redis = use_redis();
         $userinfo = getOpenid($code);
         $data['openid'] = $userinfo['openid'];
         try{
-            Db::table('user')->save($data);
-        }catch (\Exception $e){}
-        $_3rd_session = $this->_3rd_session();
-        $redis->setex($_3rd_session,3600,serialize($userinfo));
-        return $_3rd_session;
+            $uid = Db::name('user')->insertGetId($data);
+        }catch (\Exception $e){
+            $uid = Db::table('user')->where('openid', $data['openid'])->value('id');
+        }
+        $data['_3rd_session'] = $_3rd_session = $this->_3rd_session();
+        session($_3rd_session,serialize($userinfo));
+        session('uid',$uid);
+        $data['session_id'] = Session::getId();
+        //之前使用redis做存储
+        //$redis = use_redis();
+        //$redis->setex($_3rd_session,3600,serialize($userinfo));
+        return $data;
     }
 
     /**
@@ -38,7 +45,7 @@ class WeiXinApp{
     public function UserMapUpdate($data,$session_key){
         $redis = use_redis();
         $openid = unserialize($session_key)['openid'];
-        $uid = Db::table('user')->where('openid',$openid)->getField('id');
+        $uid = Db::table('user')->where('openid',$openid)->value('id');
         $latitude = 'latitude_'.$uid;
         $longitude = 'longitude_'.$uid;
         $time = 'create_time_'.$uid;
@@ -56,9 +63,9 @@ class WeiXinApp{
     public function UserMapGet($session_key){
         $redis = use_redis();
         $openid = unserialize($session_key)['openid'];
-        $openid = Db::table('user')->where('openid','<>',$openid)->where('type',1)->getField('openid');
-        $latitude = 'latitude_'.$openid;
-        $longitude = 'longitude_'.$openid;
+        $uid = Db::table('user')->where('openid','<>',$openid)->where('type',1)->value('id');
+        $latitude = 'latitude_'.$uid;
+        $longitude = 'longitude_'.$uid;
         $data['latitude'] = $redis->hGet('map',$latitude);
         $data['longitude'] = $redis->hGet('map',$longitude);
         return $data;

@@ -12,11 +12,12 @@ use app\Request;
 class WeiXinApp {
     public function __construct()
     {
-        $redis = use_redis();
+//        $redis = use_redis();
+//        $this->session_key =  $redis->get($this->_3rd_session);
         $this->_3rd_session = input('post._3rd_session');
-        $this->session_key =  $redis->get($this->_3rd_session);
+        $this->session_value =  session($this->_3rd_session);
         $this->WeiXinApp = new logic\WeiXinApp();
-        if(empty($this->session_key)){
+        if(empty($this->session_value)){
             $this->isLoginAttent();
         }
     }
@@ -26,11 +27,14 @@ class WeiXinApp {
      */
     public function isLoginAttent(){
         $code = input('post.code');
-        if(!empty($code) && empty($this->_3rd_session)){
-            $_3rd_session = $this->WeiXinApp->Userlogin($code);
-            json(1,'success',$_3rd_session);
+        if(empty($this->session_value)){
+            if(!empty($code)){
+                $data = $this->WeiXinApp->Userlogin($code);
+                json(1,'success',$data);
+            }else{
+                json(101,'NOT_LOGIN');
+            }
         }
-        json(101,'NOT_LOGIN');
     }
 
     /**
@@ -39,7 +43,7 @@ class WeiXinApp {
     public function userInfoUpdate(){
         $userinfo = input('post.userinfo');
         if(!empty($userinfo)){
-            $this->WeiXinApp->UserInfoUpdate($userinfo,$this->session_key);
+            $this->WeiXinApp->UserInfoUpdate($userinfo,$this->session_value);
         }
         json(1,'success');
     }
@@ -50,7 +54,7 @@ class WeiXinApp {
     public function userMapUpdate(){
         $map_info = input('post.map_info');
         if(!empty($map_info)){
-            $this->WeiXinApp->UserMapUpdate($map_info,$this->session_key);
+            $this->WeiXinApp->UserMapUpdate($map_info,$this->session_value);
         }
         json(1,'success');
     }
@@ -59,7 +63,7 @@ class WeiXinApp {
      * @获取用户经纬度
      */
     public function userMapGet(){
-        $data = $this->WeiXinApp->UserMapGet($this->session_key);
+            $data = $this->WeiXinApp->UserMapGet($this->session_value);
         json(1,'success',$data);
     }
 

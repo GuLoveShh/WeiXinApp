@@ -35,5 +35,7 @@ return [
     'wei_xin_app_info' => array(
         'appid'  => 'wx4e914ad8a9f219ce',
         'secret' => '46a4e937b1e3c5520c2c2285f89f4ea6',
-    )
+    ),
+    //根目录地址
+    'log_path' => '/home/admin/logs/',
 ];
