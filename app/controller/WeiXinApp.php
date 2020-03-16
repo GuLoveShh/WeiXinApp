@@ -9,6 +9,7 @@
 namespace app\controller;
 use app\logic;
 use app\Request;
+use think\facade\Session;
 class WeiXinApp {
     public function __construct()
     {
@@ -32,9 +33,9 @@ class WeiXinApp {
             if(!empty($code)){
                 $data = $this->WeiXinApp->Userlogin($code);
                 $data['session_id'] = $this->session_id;
-                json(1,'success',$data);
+                re_json(1,'success',$data);
             }else{
-                json(101,'NOT_LOGIN');
+                re_json(101,'NOT_LOGIN');
             }
         }
     }
@@ -47,7 +48,7 @@ class WeiXinApp {
         if(!empty($userinfo)){
             $this->WeiXinApp->UserInfoUpdate($userinfo,$this->session_value);
         }
-        json(1,'success');
+        re_json(1,'success');
     }
 
     /**
@@ -58,7 +59,7 @@ class WeiXinApp {
         if(!empty($map_info)){
             $this->WeiXinApp->UserMapUpdate($map_info,$this->session_value);
         }
-        json(1,'success');
+        re_json(1,'success');
     }
 
     /**
@@ -66,7 +67,7 @@ class WeiXinApp {
      */
     public function userMapGet(){
             $data = $this->WeiXinApp->UserMapGet($this->session_value);
-        json(1,'success',$data);
+        re_json(1,'success',$data);
     }
 
     public function imgupload(){

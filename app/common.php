@@ -18,17 +18,14 @@ function getOpenid($code){
  * @param string $data
  * @param string $data1
  */
-function json($code,$msg,$data = '',$data1 = ''){
-    header("Content-type:text/html;charset=utf-8");
+function re_json($code,$msg,$data = '',$data1 = ''){
     $arr = array(
         'code' => $code,
         'msg' => $msg,
         'data' => $data,
         'data1' => $data1
     );
-    $json_data = urldecode(json_encode($arr,JSON_UNESCAPED_SLASHES));
-    echo $json_data;
-    exit;
+    return json($arr);
 }
 
 /**

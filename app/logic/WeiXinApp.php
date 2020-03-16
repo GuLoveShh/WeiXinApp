@@ -7,7 +7,6 @@
  */
 namespace app\logic;
 use think\facade\Db;
-use think\facade\Session;
 class WeiXinApp{
     public function Userlogin($code){
         $userinfo = getOpenid($code);
