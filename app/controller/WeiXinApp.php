@@ -19,9 +19,10 @@ class WeiXinApp {
         $this->_3rd_session = input('post._3rd_session');
         $this->session_value =  session($this->_3rd_session);
         $this->WeiXinApp = new logic\WeiXinApp();
-        if(empty($this->session_value)){
-            $this->isLoginAttent();
-        }
+    }
+
+    public function index(){
+        re_json(1,'success');
     }
 
     /**
@@ -29,14 +30,12 @@ class WeiXinApp {
      */
     public function isLoginAttent(){
         $code = input('post.code');
-        if(empty($this->session_value)){
-            if(!empty($code)){
-                $data = $this->WeiXinApp->Userlogin($code);
-                $data['session_id'] = $this->session_id;
-                re_json(1,'success',$data);
-            }else{
-                re_json(101,'NOT_LOGIN');
-            }
+        if(!empty($code)){
+            $data = $this->WeiXinApp->Userlogin($code);
+            $data['session_id'] = $this->session_id;
+            re_json(1,'success',$data);
+        }else{
+            re_json(101,'NOT_CODE');
         }
     }
 
