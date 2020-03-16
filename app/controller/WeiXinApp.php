@@ -22,7 +22,7 @@ class WeiXinApp {
     }
 
     public function index(){
-        re_json(1,'success');
+        return re_json(1,'success');
     }
 
     /**
@@ -33,9 +33,9 @@ class WeiXinApp {
         if(!empty($code)){
             $data = $this->WeiXinApp->Userlogin($code);
             $data['session_id'] = $this->session_id;
-            re_json(1,'success',$data);
+            return re_json(1,'success',$data);
         }else{
-            re_json(101,'NOT_CODE');
+            return re_json(101,'NOT_CODE');
         }
     }
 
@@ -47,7 +47,7 @@ class WeiXinApp {
         if(!empty($userinfo)){
             $this->WeiXinApp->UserInfoUpdate($userinfo,$this->session_value);
         }
-        re_json(1,'success');
+        return re_json(1,'success');
     }
 
     /**
@@ -58,7 +58,7 @@ class WeiXinApp {
         if(!empty($map_info)){
             $this->WeiXinApp->UserMapUpdate($map_info,$this->session_value);
         }
-        re_json(1,'success');
+        return re_json(1,'success');
     }
 
     /**
@@ -66,7 +66,7 @@ class WeiXinApp {
      */
     public function userMapGet(){
             $data = $this->WeiXinApp->UserMapGet($this->session_value);
-        re_json(1,'success',$data);
+        return re_json(1,'success',$data);
     }
 
     public function imgupload(){
