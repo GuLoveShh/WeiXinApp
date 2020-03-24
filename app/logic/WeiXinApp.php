@@ -42,8 +42,7 @@ class WeiXinApp{
      */
     public function UserMapUpdate($data,$session_key){
         $redis = use_redis();
-        $openid = unserialize($session_key)['openid'];
-        $uid = Db::table('user')->where('openid',$openid)->value('id');
+        $uid = session('uid');
         $latitude = 'latitude_'.$uid;
         $longitude = 'longitude_'.$uid;
         $time = 'create_time_'.$uid;
@@ -60,8 +59,7 @@ class WeiXinApp{
      */
     public function UserMapGet($session_key){
         $redis = use_redis();
-        $openid = unserialize($session_key)['openid'];
-        $uid = Db::table('user')->where('openid','<>',$openid)->where('type',1)->value('id');
+        $uid = session('uid');
         $latitude = 'latitude_'.$uid;
         $longitude = 'longitude_'.$uid;
         $data['latitude'] = $redis->hGet('map',$latitude);

@@ -65,7 +65,7 @@ class WeiXinApp {
      * @获取用户经纬度
      */
     public function userMapGet(){
-            $data = $this->WeiXinApp->UserMapGet($this->session_value);
+        $data = $this->WeiXinApp->UserMapGet($this->session_value);
         return re_json(1,'success',$data);
     }
 

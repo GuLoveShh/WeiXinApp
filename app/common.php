@@ -1,6 +1,6 @@
 <?php
 use \think\facade\Config;
-use \think\Request;
+use \think\facade\Request;
 // 应用公共文件
 function getOpenid($code){
     $appid = Config('app.wei_xin_app_info.appid');
@@ -25,6 +25,7 @@ function re_json($code,$msg,$data = '',$data1 = ''){
         'data' => $data,
         'data1' => $data1
     );
+    common_log($code);
     return json($arr);
 }
 
@@ -44,15 +45,14 @@ function use_redis(){
 function common_log($json_data='-'){
     $uid = session('uid');
     $request = $_POST == true ? (json_encode($_POST,320)) : ($_GET == true ? (json_encode($_GET,320)) : '-');
-    $urls = $_SERVER['PHP_SELF'];
+    $urls = $_SERVER['REQUEST_URI'];
     $url_data = explode("/",$urls);
     $controller = $url_data[count($url_data)-3]?:'-';
     $action = $url_data[count($url_data)-2]?:'-';
     $method = $url_data[count($url_data)-1]?:'-';
-    $runtime = round((microtime(true)-$GLOBALS['_beginTime']),4);
-    $request = Request::instance();
-    $ip = $request->ip();
-    $apic = date("Y-m-d H:i:s",time()).'|'.$ip.'|'.$uid.'|'.$controller.'|'.$action.'|'.$method.'|'.$request.'|'.$json_data.'|'.$GLOBALS['_beginTime'].'|'.microtime(true).'|'.$runtime."\n";
+    $runtime = round((microtime(true)-$_SERVER['REQUEST_TIME_FLOAT']),4);
+    $ip = Request::ip();
+    $apic = date("Y-m-d H:i:s",time()).'|'.$ip.'|'.$uid.'|'.$controller.'|'.$action.'|'.$method.'|'.$request.'|'.$json_data.'|'.$_SERVER['REQUEST_TIME_FLOAT'].'|'.microtime(true).'|'.$runtime."\n";
     $file_name = Config('app.log_path').'common/'.date('Y_m_d').'.log';
     file_put_contents($file_name,$apic,FILE_APPEND | LOCK_EX);
 }
